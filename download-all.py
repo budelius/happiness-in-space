@@ -37,7 +37,7 @@ def save_image_data(source, title, image_url, description, outdir):
 def scrape_esa_images():
     print("Scraping ESA...")
     BASE_URL = "https://www.esa.int"
-    START_URL = f"{BASE_URL}/Highlights/Image_of_the_Week"
+    START_URL = f"{BASE_URL}/Applications/Observing_the_Earth/Highlights/Image_of_the_Day"
     seen_links = set()
     current_url = START_URL
 
