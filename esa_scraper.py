@@ -3,7 +3,11 @@ import time
 import requests
 from bs4 import BeautifulSoup
 
-def scrape_esa_images(force_redownload=False):
+def scrape_esa_images(force_redownload=False, recreate_overlays=False):
+    if recreate_overlays:
+        print("ESA: Recreate overlays mode - skipping image scraping")
+        return
+        
     print("Scraping ESA...")
     BASE_URL = "https://www.esa.int"
     START_URL = f"{BASE_URL}/Applications/Observing_the_Earth/Highlights/Image_of_the_Day"
@@ -51,7 +55,7 @@ def scrape_esa_images(force_redownload=False):
                     else:
                         continue  # Skip if we can't find an image
                 
-                save_image_data("ESA", title, img_url, desc, "esa_images", force_redownload)
+                save_image_data("ESA", title, img_url, desc, "esa_images", force_redownload, recreate_overlays)
                 time.sleep(1)
             except Exception as e:
                 print(f"ESA error: {e}")

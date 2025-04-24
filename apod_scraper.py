@@ -6,14 +6,19 @@ import re
 import datetime
 import os
 
-def scrape_apod_images(days_to_scrape=7, force_redownload=False):
+def scrape_apod_images(days_to_scrape=7, force_redownload=False, recreate_overlays=False):
     """
     Scrape NASA's Astronomy Picture of the Day
     
     Args:
         days_to_scrape: Number of recent days to scrape (default: 7)
         force_redownload: Whether to re-download existing images
+        recreate_overlays: Whether to only recreate overlay images
     """
+    if recreate_overlays:
+        print("APOD: Recreate overlays mode - skipping image scraping")
+        return
+        
     print("Scraping NASA Astronomy Picture of the Day...")
     
     BASE_URL = "https://apod.nasa.gov/apod/"
@@ -151,7 +156,7 @@ def scrape_apod_images(days_to_scrape=7, force_redownload=False):
             
             # Save the image
             print(f"Processing APOD image: {unique_title}")
-            if save_image_data("NASA_APOD", unique_title, img_url, description, "apod_images", force_redownload):
+            if save_image_data("NASA_APOD", unique_title, img_url, description, "apod_images", force_redownload, recreate_overlays):
                 downloaded_count += 1
                 
             # Be nice to the server

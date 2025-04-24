@@ -3,6 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="uv (happiness-in-space)" />
   </component>
-  <component name="KubernetesApiProvider"><![CDATA[{}]]></component>
   <component name="ProjectRootManager" version="2" project-jdk-name="uv (happiness-in-space)" project-jdk-type="Python SDK" />
 </project>

@@ -2,24 +2,42 @@ from utils import save_image_data, HEADERS
 import time
 import requests
 import traceback
+import random
 
-def scrape_nasa_images(force_redownload=False):
+def scrape_nasa_images(force_redownload=False, recreate_overlays=False):
+    if recreate_overlays:
+        print("NASA: Recreate overlays mode - skipping image scraping")
+        return
+        
     print("Scraping NASA...")
     
     # NASA now has a dedicated Images API we can use instead of scraping
     API_URL = "https://images-api.nasa.gov/search"
     
     try:
+        # Search queries to pick from randomly
+        search_queries = [
+            "earth OR planet OR space",
+            "moon OR mars OR jupiter",
+            "galaxy OR nebula OR stars",
+            "spacecraft OR astronaut",
+            "asteroid OR comet OR meteor"
+        ]
+        
         # Get NASA images from their Images API
-        # Search for space images and sort by recent ones first
+        # Use random query and page for more variety
+        random_query = random.choice(search_queries)
+        random_page = random.randint(1, 50)  # NASA API has many pages of results
+        
         params = {
-            "q": "earth OR planet OR space OR moon OR mars",  # Simplified query
+            "q": random_query,
             "media_type": "image",
-            "year_start": "2020",  # Recent images for better quality
-            "page_size": 20        # Get a reasonable number of images
+            "year_start": "2000",  # Extended date range for more variety
+            "page": random_page,
+            "page_size": 50        # Get more images
         }
         
-        print("Fetching images from NASA API...")
+        print(f"Fetching images from NASA API with query '{random_query}' (page {random_page})...")
         response = requests.get(API_URL, params=params)
         if response.status_code != 200:
             print(f"Failed to access NASA API: {response.status_code}")
@@ -34,6 +52,9 @@ def scrape_nasa_images(force_redownload=False):
             
         items = data["collection"]["items"]
         print(f"Found {len(items)} NASA images")
+        
+        # Shuffle items for additional randomness
+        random.shuffle(items)
         
         for item in items:
             try:
@@ -83,7 +104,7 @@ def scrape_nasa_images(force_redownload=False):
                     img_url = "https://" + img_url[7:]
                 
                 print(f"Processing NASA image: {title} - {img_url}")
-                save_image_data("NASA", title, img_url, desc, "nasa_images", force_redownload)
+                save_image_data("NASA", title, img_url, desc, "nasa_images", force_redownload, recreate_overlays)
                 time.sleep(1)  # Be respectful with rate limiting
                 
             except Exception as e:
